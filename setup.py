@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='tremendous-theme-selector',
-    version='0.8',
+    version="$VERSION",
     author="zeionara",
     author_email="zeionara@gmail.com",
     description="A simple app for manually annotating audio files",
