@@ -42,7 +42,6 @@ def annotate_with_binary_labels(input_folder_path, input_labels_file_path, outpu
                 play_thread = Thread(target=play_file, args=(chosen_file, flags))
                 play_thread.start()
                 annotations[chosen_file] = score_future.result()
-                print('Completed')
                 flags[0] = False
                 counter += 1
                 files.remove(chosen_file)
