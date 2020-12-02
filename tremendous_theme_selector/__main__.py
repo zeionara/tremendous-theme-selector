@@ -1,5 +1,7 @@
 import os
 import random
+from concurrent.futures.thread import ThreadPoolExecutor
+from threading import Thread
 
 import click
 import pygame
@@ -30,23 +32,33 @@ def annotate_with_binary_labels(input_folder_path, input_labels_file_path, outpu
         ]
     annotations = {}
     counter = 0
-    while len(files) > 0:
-        chosen_file = random.choice(files)
-        print(f'Annotating file {chosen_file}' + (f' {counter + 1}/{n_files_to_annotate}' if n_files_to_annotate is not None else ''))
-        play_file(chosen_file)
-        annotations[chosen_file] = get_binary_label()
-        counter += 1
-        files.remove(chosen_file)
-        if n_files_to_annotate is not None and counter >= n_files_to_annotate:
-            print(f'Good job! You have annotated {n_files_to_annotate} files!')
-            break
-    else:
-        print('Good job! You have annotated all the files!')
-    os.makedirs(os.path.dirname(os.path.realpath(output_labels_file_path)), exist_ok=True)
-    write_lines(
-        output_labels_file_path,
-        stringify_annotations(annotations)
-    )
+    flags = [True, ]
+    try:
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            while len(files) > 0:
+                chosen_file = random.choice(files)
+                print(f'Annotating file {chosen_file}' + (f' {counter + 1}/{n_files_to_annotate}' if n_files_to_annotate is not None else ''))
+                score_future = executor.submit(get_binary_label)
+                play_thread = Thread(target=play_file, args=(chosen_file, flags))
+                play_thread.start()
+                annotations[chosen_file] = score_future.result()
+                print('Completed')
+                flags[0] = False
+                counter += 1
+                files.remove(chosen_file)
+                if n_files_to_annotate is not None and counter >= n_files_to_annotate:
+                    print(f'Good job! You have annotated {n_files_to_annotate} files!')
+                    break
+            else:
+                print('Good job! You have annotated all the files!')
+    except:
+        print(f'Good job! You have annotated {counter} files!')
+    finally:
+        os.makedirs(os.path.dirname(os.path.realpath(output_labels_file_path)), exist_ok=True)
+        write_lines(
+            output_labels_file_path,
+            stringify_annotations(annotations)
+        )
 
 
 if __name__ == '__main__':

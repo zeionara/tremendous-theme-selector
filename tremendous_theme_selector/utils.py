@@ -15,9 +15,9 @@ def get_all_files(path: str, extension: str = 'wav'):
 def get_binary_label():
     while True:
         user_input = input('Enter your score: ')
-        if user_input == '-':
+        if user_input == ';':
             return 0
-        elif user_input == '+':
+        elif user_input == "'":
             return 1
         else:
             print('Cannot recognize the label, please, try again.')
@@ -64,7 +64,24 @@ def parse_annotations(path: str):
     }
 
 
-def play_file(path: str):
-    my_sound = pygame.mixer.Sound(path)
-    my_sound.play()
-    pygame.time.wait(int(my_sound.get_length() * 1000))
+def play_file(path: str, flags: list):
+    # step = 0.01
+    pygame.mixer.music.load(path)
+    pygame.mixer.music.play()
+    # length = float(my_sound.get_length())
+    # while flags[0]:
+    #     pass
+    # while length > 0 and flags[0]:
+    #     if length - step > 0:
+    #         sleep(step)
+    #         length -= step
+    #     else:
+    #         sleep(length)
+    #         length = 0
+    # pygame.mixer.pause()
+    # pygame.mixer.unpause()
+    # pygame.mixer.music.stop()
+    # while pygame.mixer.get_busy() and flags[0]:
+    #     my_sound.stop()
+    #     pygame.time.delay(100)
+    #     pygame.event.poll()

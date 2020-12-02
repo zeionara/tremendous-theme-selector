@@ -1,2 +1,3 @@
-/home/zeio/Downloads/crt/000001.wav	1
-/home/zeio/Downloads/crt/ok/000004.wav	1
+/home/zeio/Downloads/crt/000002.wav	1
+/home/zeio/Downloads/crt/000003.wav	0
+/home/zeio/Downloads/crt/ok/000006.wav	0
