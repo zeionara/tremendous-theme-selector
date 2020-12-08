@@ -12,15 +12,22 @@ def get_all_files(path: str, extension: str = 'wav'):
                 yield os.path.join(dirpath, file)
 
 
-def get_binary_label():
-    while True:
-        user_input = input('Enter your score: ')
+def get_binary_label(output_labels_file_paths: [str]):
+    n_required_labels = len(output_labels_file_paths)
+    i = 0
+    annotations = {}
+    while i < n_required_labels:
+        output_labels_file_path = output_labels_file_paths[i]
+        user_input = input(f'Enter your score for {os.path.basename(output_labels_file_path)}: ')
         if user_input == ';':
-            return 0
+            annotations[output_labels_file_path] = 0
+            i += 1
         elif user_input == "'":
-            return 1
+            annotations[output_labels_file_path] = 1
+            i += 1
         else:
             print('Cannot recognize the label, please, try again.')
+    return annotations
 
 
 def write(filename, content):
